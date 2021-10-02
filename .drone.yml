@@ -8,8 +8,8 @@ steps:
     image: dlangchina/dlang-dmd
     commands:
       - apt-get update
-      - apt-get upgrade
-      - apt-get install libssl-dev
+      - apt-get -y upgrade
+      - apt-get -y install libssl-dev
       - dub build -b release
       - mkdir dist
       - cp ./prostagma ./dist/prostagma
