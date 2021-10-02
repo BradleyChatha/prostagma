@@ -1,0 +1,8 @@
+name "prostagma"
+description "A minimal D application."
+authors "Bradley"
+copyright "Copyright © 2021, Bradley"
+license "proprietary"
+dependency "vibe-d" version="~>0.9.4"
+dependency "lumars" version="~>1.0.2"
+dependency "jcli" version="~>0.22.4"

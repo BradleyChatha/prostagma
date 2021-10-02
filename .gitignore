@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/prostagma
+prostagma.so
+prostagma.dylib
+prostagma.dll
+prostagma.a
+prostagma.lib
+prostagma-test-*
+*.exe
+*.o
+*.obj
+*.lst
