@@ -3,9 +3,13 @@ kind: pipeline
 type: docker
 name: Default
 
+trigger:
+  event:
+    - push
+
 steps:
   - name: Build
-    image: dlang2/ldc-ubuntu
+    image: dlangchina/dlang-dmd
     commands:
       - dub build -b release
       - mkdir dist
