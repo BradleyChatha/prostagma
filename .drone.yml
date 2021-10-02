@@ -24,6 +24,5 @@ steps:
         - tag
 
 trigger:
-  event:
-    - push
-    
+  branch:
+    - master
