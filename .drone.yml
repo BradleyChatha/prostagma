@@ -3,10 +3,6 @@ kind: pipeline
 type: docker
 name: Default
 
-trigger:
-  event:
-    - push
-
 steps:
   - name: Build
     image: dlangchina/dlang-dmd
