@@ -77,22 +77,17 @@ void onConnect(scope WebSocket socket) nothrow
                         vibe.inet.urltransfer.download(json["url"].get!string, filename);
                         scope(exit) std.file.remove(filename);
                         logInfo("File downloaded into: %s", filename);
+                        transferFile(filename, socket);
+                        break;
 
-                        auto file = File(filename, "rb");
-                        file.seek(0, SEEK_END);
-                        const length = file.tell;
-                        file.seek(0);
+                    case "download_s3":
+                        logInfo("Client wants us to download %s from S3", json["uri"]);
 
-                        logInfo("Sending file size");
-                        socket.send(nativeToBigEndian(length));
-                        
-                        ubyte[4096] buffer;
-                        while(file.tell < length)
-                        {
-                            const slice = file.rawRead(buffer);
-                            logInfo("Sending next %s bytes. %s/%s", slice.length, file.tell, length);
-                            socket.send(slice);
-                        }
+                        auto filename = randomUUID().toString();
+                        scope(exit) std.file.remove(filename);
+                        const output = executeShell(escapeShellCommand("aws", "s3", "cp", "s3://"~json["uri"].get!string, filename));
+                        enforce(output.status == 0, "Error from AWS:\n"~output.output);
+                        transferFile(filename, socket);
                         break;
 
                     default:
@@ -178,4 +173,23 @@ string getBearer(string auth)
     if(match.empty)
         return null;
     return match[1];
+}
+
+private void transferFile(string filename, WebSocket socket)
+{
+    auto file = File(filename, "rb");
+    file.seek(0, SEEK_END);
+    const length = file.tell;
+    file.seek(0);
+
+    logInfo("Sending file size");
+    socket.send(nativeToBigEndian(length));
+    
+    ubyte[4096] buffer;
+    while(file.tell < length)
+    {
+        const slice = file.rawRead(buffer);
+        logInfo("Sending next %s bytes. %s/%s", slice.length, file.tell, length);
+        socket.send(slice);
+    }
 }

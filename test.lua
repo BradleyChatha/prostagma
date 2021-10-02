@@ -1,1 +1,1 @@
-download_proxy('https://raw.githubusercontent.com/BradleyChatha/infrastructure/master/main.tf', "test.tf");
+download_proxy_s3('bradley-chatha/website/dist.zip', "test.tf");

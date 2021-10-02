@@ -12,13 +12,13 @@ steps:
       - apt-get -y install libssl-dev
       - dub build -b release
       - mkdir dist
-      - cp ./prostagma ./dist/prostagma
+      - cp ./prostagma ./dist/prostagma-linux64
   - name: Release
     image: plugins/github-release
     settings:
       api_key:
         from_secret: GITHUB_API_KEY
-      files: dist/prostagma
+      files: dist/prostagma-linux64
       checksum:
         - md5
     when:

@@ -119,6 +119,7 @@ LuaState setupState()
     state.register!dir_push("dir_push");
     state.register!dir_pop("dir_pop");
     state.register!proxy_download("download_proxy");
+    state.register!proxy_s3_download("download_proxy_s3");
 
     return state;
 }
@@ -167,7 +168,24 @@ void proxy_download(string url, string file)
 
     logInfo("Asking server to download %s for us. Placing it into file %s", url, file);
     g_clientSocket.send(json.toString());
+    recieveFile(file);
+    logInfo("Download finished");
+}
 
+void proxy_s3_download(string uri, string file)
+{
+    Json json = Json.emptyObject;
+    json["type"] = "download_s3";
+    json["uri"] = uri;
+
+    logInfo("Asking server to download %s for us from S3. Placing it into file %s", uri, file);
+    g_clientSocket.send(json.toString());
+    recieveFile(file);
+    logInfo("Download finished");
+}
+
+private void recieveFile(string file)
+{
     auto f = File(file, "wb");
 
     ubyte[] fSizeBytes = g_clientSocket.receiveBinary();
@@ -185,6 +203,4 @@ void proxy_download(string url, string file)
             f.rawWrite(buffer[0..amount]);
         });
     }
-
-    logInfo("Download finished");
 }

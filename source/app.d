@@ -34,7 +34,7 @@ struct TestCommand
     void onExecute()
     {
         import vibe.d;
-        setLogLevel(LogLevel.trace);
+        setLogLevel(LogLevel.debug_);
         auto uuid = clientRegister();
         auto socket = initConnection(uuid);
         scope(exit) socket.close();
