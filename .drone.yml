@@ -7,7 +7,7 @@ steps:
   - name: Build
     image: dlangchina/dlang-dmd
     commands:
-      - sudo apt-get install libssl-dev
+      - apt-get install libssl-dev
       - dub build -b release
       - mkdir dist
       - cp ./prostagma ./dist/prostagma
@@ -22,3 +22,7 @@ steps:
     when:
       event:
         - tag
+
+trigger:
+  event:
+    - push
