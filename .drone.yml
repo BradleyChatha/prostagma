@@ -1,0 +1,23 @@
+---
+kind: pipeline
+type: docker
+name: Default
+
+steps:
+  - name: Build
+    image: dlang2/ldc-ubuntu
+    commands:
+      - dub build -b release
+      - mkdir dist
+      - cp ./prostagma ./dist/prostagma
+  - name: Release
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: GITHUB_API_KEY
+      files: dist/prostagma
+      checksum:
+        - md5
+    when:
+      event:
+        - tag
