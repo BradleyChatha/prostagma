@@ -60,6 +60,19 @@ func askServerToDownloadFile(url string) error {
 	return nil
 }
 
+func askServerToDownloadFileS3(url string) error {
+	var data SetCache
+	data.Secret = os.Getenv("PROSTAGMA_SECRET")
+	data.Url = url
+
+	_, err := POST("/cache/s3", data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func updateTriggerCount() {
 	var data GetTrigger
 	data.Trigger = os.Getenv("PROSTAGMA_TRIGGER")
@@ -208,29 +221,52 @@ func runBuildScript() {
 					g_logger.Error("Error running build script `download` step", zap.Error(err))
 					return
 				}
-
-				if !download.Cache {
-					err = askServerToDownloadFile(download.Url)
-					if err != nil {
-						g_logger.Error("Server could not download file", zap.Error(err))
-						return
-					}
-				}
-
-				err = downloadCachedFile(download.Url, download.Dest)
+				err = doDownloadFile(download.Url, download.Dest, download.Cache, askServerToDownloadFile)
 				if err != nil {
-					err = askServerToDownloadFile(download.Url)
-					if err != nil {
-						g_logger.Error("Server could not download file", zap.Error(err))
-						return
-					}
-					err = downloadCachedFile(download.Url, download.Dest)
-					if err != nil {
-						g_logger.Error("Could not download file", zap.Error(err))
-						return
-					}
+					return
 				}
+			} else if name == "download_s3" {
+				var download DownloadStep
+				err := child.Decode(&download)
+				if err != nil {
+					g_logger.Error("Error running build script `download` step", zap.Error(err))
+					return
+				}
+				err = doDownloadFile(download.Url, download.Dest, download.Cache, askServerToDownloadFileS3)
+				if err != nil {
+					return
+				}
+			} else {
+				g_logger.Error("Unknown step command", zap.String("command", name))
+				return
 			}
 		}
 	}
+}
+
+func doDownloadFile(url string, dest string, cache bool, downloader func(url string) error) error {
+	var err error
+	if !cache {
+		err = downloader(url)
+		if err != nil {
+			g_logger.Error("Server could not download file", zap.Error(err))
+			return err
+		}
+	}
+
+	err = downloadCachedFile(url, dest)
+	if err != nil {
+		err = downloader(url)
+		if err != nil {
+			g_logger.Error("Server could not download file", zap.Error(err))
+			return err
+		}
+		err = downloadCachedFile(url, dest)
+		if err != nil {
+			g_logger.Error("Could not download file", zap.Error(err))
+			return err
+		}
+	}
+
+	return nil
 }

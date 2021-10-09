@@ -3,7 +3,7 @@ steps:
   - shell: |
       echo 2
       echo 3
-  - download:
+  - download_s3:
       cache: false
-      url: https://raw.githubusercontent.com/grafana/loki/v2.3.0/cmd/loki/loki-local-config.yaml
+      url: s3://bradley-chatha/website/dist.zip
       dest: test_download.yaml
