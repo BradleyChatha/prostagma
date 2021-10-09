@@ -1,0 +1,25 @@
+---
+kind: pipeline
+type: docker
+name: Default
+
+steps:
+- name: Build
+  image: golang:alpine
+  commands:
+  - go install .
+  - cp $GOPATH/bin/prostagma .
+
+- name: Publish
+  image: plugins/docker
+  settings:
+    username:
+        from_secret: DOCKER_USERNAME
+    password:
+        from_secret: DOCKER_PASSWORD
+    repo: bradleychatha/prostagma
+    tags: latest
+
+trigger:
+  branch:
+    - master

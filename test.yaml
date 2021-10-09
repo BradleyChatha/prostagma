@@ -1,0 +1,9 @@
+steps:
+  - shell: echo 1
+  - shell: |
+      echo 2
+      echo 3
+  - download:
+      cache: false
+      url: https://raw.githubusercontent.com/grafana/loki/v2.3.0/cmd/loki/loki-local-config.yaml
+      dest: test_download.yaml
