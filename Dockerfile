@@ -10,4 +10,6 @@ ENV PROSTAGMA_SECRET=
 ENV PROSTAGMA_TRIGGER=
 ENV PROSTAGMA_SCRIPT=
 
+RUN apk add --update aws-cli
+
 CMD ["/app/prostagma"]
