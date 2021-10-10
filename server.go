@@ -176,7 +176,7 @@ func onCacheFileS3(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 
-	cmd := exec.Command("/usr/local/bin/aws", "s3", "cp", message.Url, f.Name())
+	cmd := exec.Command(os.Getenv("PROSTAGMA_AWS"), "s3", "cp", message.Url, f.Name())
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		g_logger.Error("Failed to invoke AWS", zap.String("ip", r.RemoteAddr), zap.String("url", message.Url), zap.Error(err), zap.String("output", string(out)))
