@@ -196,7 +196,7 @@ func onCacheFileS3(w http.ResponseWriter, r *http.Request) {
 func serveTriggerCount(w http.ResponseWriter, r *http.Request) {
 	var message GetTrigger
 
-	g_logger.Info("Client is asking for a trigger count", zap.String("ip", r.RemoteAddr))
+	g_logger.Debug("Client is asking for a trigger count", zap.String("ip", r.RemoteAddr))
 
 	d := json.NewDecoder(r.Body)
 	err := d.Decode(&message)
