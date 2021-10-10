@@ -3,7 +3,7 @@ steps:
   - shell: |
       echo 2
       echo 3
-  - download_s3:
+  - download:
       cache: false
-      url: s3://bradley-chatha/website/dist.zip
+      url: https://raw.githubusercontent.com/BradleyChatha/jcli/master/meson.build
       dest: test_download.yaml

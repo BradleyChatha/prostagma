@@ -19,7 +19,6 @@ steps:
         from_secret: DOCKER_PASSWORD
     repo: bradleychatha/prostagma
     tags: latest
-
-trigger:
-  branch:
-    - master
+  when:
+    branch:
+      - master

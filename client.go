@@ -203,7 +203,7 @@ func runBuildScript() {
 				}
 
 				for _, str := range strings.Split(shell, "\n") {
-					cmd := exec.Command("/usr/bin/bash", "-c", str)
+					cmd := exec.Command(os.Getenv("PROSTAGMA_SHELL"), "-c", str)
 					out, err := cmd.CombinedOutput()
 					if err != nil {
 						g_logger.Error("Error running command", zap.Error(err), zap.String("command", str))
