@@ -246,6 +246,7 @@ func runBuildScript() {
 
 func doDownloadFile(url string, dest string, cache bool, downloader func(url string) error) error {
 	var err error
+	g_logger.Info("Asking server to send us a file", zap.String("url", url), zap.String("dest", dest), zap.Bool("cache", cache))
 	if !cache {
 		err = downloader(url)
 		if err != nil {

@@ -221,7 +221,7 @@ func serveTriggerCount(w http.ResponseWriter, r *http.Request) {
 		g_triggerCounts[message.Trigger] = 0
 	}
 
-	g_logger.Info("Providing trigger count",
+	g_logger.Debug("Providing trigger count",
 		zap.String("ip", r.RemoteAddr),
 		zap.String("trigger", message.Trigger),
 		zap.Int("count", count),
