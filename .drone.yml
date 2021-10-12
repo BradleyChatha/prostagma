@@ -25,6 +25,7 @@ steps:
     when:
       branch:
         - master
+    failure: ignore # For the love of god Drone team, fix this damn Docker in docker bug.
 
   - name: Make Dist
     image: alpine:latest
