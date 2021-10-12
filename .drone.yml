@@ -49,7 +49,7 @@ steps:
       PROSTAGMA_SECRET:
         from_secret: PROSTAGMA_SECRET
     commands:
-      - aws s3api put-object --bucket bradley-chatha --key artifacts/gwyliwr_dist.zip --body ./gwyliwr.zip
+      - aws s3api put-object --bucket bradley-chatha --key artifacts/prostagma_dist.zip --body ./prostagma.zip
     when:
       branch:
         - master
