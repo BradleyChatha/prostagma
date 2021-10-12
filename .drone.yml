@@ -4,21 +4,51 @@ type: docker
 name: Default
 
 steps:
-- name: Build
-  image: golang:alpine
-  commands:
-  - go install .
-  - cp $GOPATH/bin/prostagma .
+  - name: Build
+    image: golang:alpine
+    commands:
+      - export GOOS=linux
+      - export GOARCH=amd64
+      - export CGO_ENABLED=0
+      - go install .
+      - cp $GOPATH/bin/prostagma .
 
-- name: Publish
-  image: plugins/docker
-  settings:
-    username:
-        from_secret: DOCKER_USERNAME
-    password:
-        from_secret: DOCKER_PASSWORD
-    repo: bradleychatha/prostagma
-    tags: latest
-  when:
-    branch:
-      - master
+  - name: Publish
+    image: plugins/docker
+    settings:
+      username:
+          from_secret: DOCKER_USERNAME
+      password:
+          from_secret: DOCKER_PASSWORD
+      repo: bradleychatha/prostagma
+      tags: latest
+    when:
+      branch:
+        - master
+
+  - name: Make Dist
+    image: alpine:latest
+    commands:
+      - apk add --update --no-cache zip
+      - zip prostagma.zip ./prostagma
+      - chmod 0666 ./prostagma.zip
+    when:
+      branch:
+        - master
+
+  - name: Upload Dist
+    image: amazon/aws-cli
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
+      AWS_DEFAULT_REGION:
+        from_secret: AWS_DEFAULT_REGION
+      PROSTAGMA_SECRET:
+        from_secret: PROSTAGMA_SECRET
+    commands:
+      - aws s3api put-object --bucket bradley-chatha --key artifacts/gwyliwr_dist.zip --body ./gwyliwr.zip
+    when:
+      branch:
+        - master
