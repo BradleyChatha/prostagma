@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 )
@@ -29,6 +31,12 @@ type BuildScript struct {
 
 func clientMain() {
 	updateTriggerCount()
+
+	go func() {
+		r := mux.NewRouter()
+		r.Handle("/metrics", promhttp.Handler())
+		http.ListenAndServe(":"+os.Getenv("PROSTAGMA_PROM_PORT"), r)
+	}()
 
 	for {
 		time.Sleep(time.Second * 5)
