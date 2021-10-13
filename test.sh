@@ -12,6 +12,7 @@ sudo docker run -e PROSTAGMA_HOST=http://127.0.0.1:6969 \
                 -e PROSTAGMA_TRIGGER=test \
                 -e PROSTAGMA_SCRIPT=/build.yaml \
                 -e PROSTAGMA_SHELL=/bin/sh \
+                -e PROSTAGMA_PROM_PORT=7000 \
                 -v $PWD/test.yaml:/build.yaml \
                 --network=host \
                 --name=prostagma-test-client \
