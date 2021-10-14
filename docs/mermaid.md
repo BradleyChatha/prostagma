@@ -19,7 +19,7 @@ sequenceDiagram
         end
 
         opt Server downloads file for Client
-            Client ->> Server: POST /cache
+            Client ->> Server: POST /cache or /cache/s3
             Server ->> Internet: GET url
             alt 200 OK
                 Internet ->> Server: *caches data*

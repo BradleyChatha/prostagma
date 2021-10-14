@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "mmdc -i mermaid.md -o flows.svg"
+    "build": "mmdc -i mermaid.md -t dark -o flows.svg"
   },
   "author": "",
   "license": "ISC",
